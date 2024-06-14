@@ -24,12 +24,12 @@ const { match } = require('assert');
 exports.getAllTours = async (req, res) => {
   try {
     // BUILD QUERY
-    // 1) FILTERONG
+    // 1A) FILTERONG
     const queryObj = { ...req.query };
     const excludedfields = ['page', 'sort', 'limit', 'fields'];
     excludedfields.forEach((el) => delete queryObj[el]);
 
-    // 2) ADVANCE FILTERING
+    // 1B) ADVANCE FILTERING
     let queryStg = JSON.stringify(queryObj);
     queryStg = queryStg.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
     const query = Tour.find(JSON.parse(queryStg));
@@ -39,6 +39,15 @@ exports.getAllTours = async (req, res) => {
     //   .equals(5)
     //   .where('difficulty')
     //   .equals('easy');
+
+    // 2) SORTING
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      console.log(sortBy);
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('-createdAt');
+    }
 
     //EXECUTE QUERY
     const tours = await query;

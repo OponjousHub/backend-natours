@@ -1,0 +1,17 @@
+{
+  "name": "natours",
+  "version": "1.0.0",
+  "description": "This is a node js project with express and mongo db",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "Oponjous Joseph",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongodb": "4.1",
+    "mongoose": "5.5",
+    "nodemon": "^3.1.2"
+  }
+}

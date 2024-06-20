@@ -28,11 +28,13 @@ exports.getAllTours = async (req, res) => {
     const queryObj = { ...req.query };
     const excludedfields = ['page', 'sort', 'limit', 'fields'];
     excludedfields.forEach((el) => delete queryObj[el]);
+    console.log(req.query);
+    console.log(queryObj);
 
     // 1B) ADVANCE FILTERING
-    let queryStg = JSON.stringify(queryObj);
-    queryStg = queryStg.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-    const query = Tour.find(JSON.parse(queryStg));
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+    let query = Tour.find(JSON.parse(queryStr));
 
     // const query = await Tour.find()
     //   .where('duration')
@@ -48,6 +50,13 @@ exports.getAllTours = async (req, res) => {
     } else {
       query = query.sort('-createdAt');
     }
+    // Field Limiting
+    // if (req.query.fields) {
+    //   const field = req.query.fields.split(',').join(' ');
+    //   const query = query.select(field);
+    // } else {
+    //   const query = query.select('-__v');
+    // }
 
     //EXECUTE QUERY
     const tours = await query;

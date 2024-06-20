@@ -28,10 +28,10 @@ const tourSchema = new mongoose.Schema({
     default: 0,
   },
 
-  rating: {
-    type: Number,
-    default: 4.5,
-  },
+  // rating: {
+  //   type: Number,
+  //   default: 4.5,
+  // },
   price: {
     type: Number,
     required: [true, 'A tour must have a price'],
@@ -64,16 +64,16 @@ const tourSchema = new mongoose.Schema({
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
-const tourDoc = new Tour({
-  name: 'Calaba Kitchen',
-  // rating: 4.7,
-  price: 487,
-});
-tourDoc
-  .save()
-  .then((doc) => console.log(doc))
-  .catch((err) => {
-    console.log('Error:', err);
-  });
+// const tourDoc = new Tour({
+//   name: 'Calaba Kitchen',
+//   // rating: 4.7,
+//   price: 487,
+// });
+// tourDoc
+//   .save()
+//   .then((doc) => console.log(doc))
+//   .catch((err) => {
+//     console.log('Error:', err);
+//   });
 
 module.exports = Tour;

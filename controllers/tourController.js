@@ -28,8 +28,6 @@ exports.getAllTours = async (req, res) => {
     const queryObj = { ...req.query };
     const excludedfields = ['page', 'sort', 'limit', 'fields'];
     excludedfields.forEach((el) => delete queryObj[el]);
-    console.log(req.query);
-    console.log(queryObj);
 
     // 1B) ADVANCE FILTERING
     let queryStr = JSON.stringify(queryObj);
@@ -45,17 +43,29 @@ exports.getAllTours = async (req, res) => {
     // 2) SORTING
     if (req.query.sort) {
       const sortBy = req.query.sort.split(',').join(' ');
-      console.log(sortBy);
       query = query.sort(sortBy);
     } else {
       query = query.sort('-createdAt');
     }
+
     // Field Limiting
     if (req.query.fields) {
       const field = req.query.fields.split(',').join(' ');
       query = query.select(field);
     } else {
       query = query.select('-__v');
+    }
+
+    //Pagination
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
+    const skip = (page - 1) * limit;
+    query = query.skip(skip).limit(limit);
+
+    if (req.query.page) {
+      const tourNum = await Tour.countDocuments();
+      if (skip >= tourNum)
+        throw new Error('The document you request does not exist!');
     }
 
     //EXECUTE QUERY
@@ -67,7 +77,7 @@ exports.getAllTours = async (req, res) => {
       data: { tours: tours },
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(404).json({
       status: 'failed',
       message: err,
     });

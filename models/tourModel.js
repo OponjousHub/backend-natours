@@ -97,8 +97,16 @@ tourSchema.pre('save', function (next) {
 //   next();
 // });
 
-tourSchema.pre('/^find/', function (next) {
-  // this.find({secretTour: {$ne: true}})
+////// QUERY MIDDLEWARE
+tourSchema.pre(/^find/, function (next) {
+  this.find({ secretTour: { $ne: true } });
+  next();
+});
+
+// AGGREGATION MIDDLEWARE
+tourSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+  console.log(this.pipeline());
   next();
 });
 

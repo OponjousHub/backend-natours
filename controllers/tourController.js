@@ -6,25 +6,6 @@ const { json } = require('express');
 const { match } = require('assert');
 const catchAsyncError = require('./../utils/catchAsync');
 
-// exports.checkId =
-//   ('id',
-//   (req, res, next, val) => {
-//     const id = req.params.id * 1;
-//     // const tour = tours.find((el) => el.id === id);
-
-//     if (id > tours.length) {
-//       return res.status(404).json({
-//         status: 'fail',
-//         data: 'INvalid request',
-//       });
-//     }
-//     next();
-//   });
-
-// const tours = JSON.parse(
-//   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
-// );
-
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
   req.query.sort = 'ratingsAverage,price';

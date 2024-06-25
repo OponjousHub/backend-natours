@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     rquired: [true, 'Please enter a Password'],
     minlength: 8,
+    select: false,
   },
   passwordConfirm: {
     type: String,
@@ -29,6 +30,7 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Passwords are not the same!',
     },
+    select: false,
   },
 });
 
@@ -43,6 +45,14 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined;
   next();
 });
+
+// Compare passwords
+userSchema.methods.correctPassword = async function (
+  candidatePassword,
+  userPassword
+) {
+  return await bcrpt.compare(candidatePassword, userPassword);
+};
 
 const User = mongoose.model('user', userSchema);
 module.exports = User;

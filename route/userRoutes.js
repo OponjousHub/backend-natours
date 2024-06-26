@@ -9,11 +9,11 @@ const {
 } = require('./../controllers/userController');
 const authController = require('./../controllers/authController');
 
-const router = express.Router();
+const userRouter = express.Router();
 
-router.post('/signup', authController.signup);
-router.post('/login', authController.login);
-router.route('/').get(getAllUsers).post(createUser);
-router.route('/:id').get(getUser).delete(deleteUser).patch(updateUser);
+userRouter.post('/signup', authController.signup);
+userRouter.post('/login', authController.login);
+userRouter.route('/').get(getAllUsers).post(createUser);
+userRouter.route('/:id').get(getUser).delete(deleteUser).patch(updateUser);
 
-module.exports = router;
+module.exports = userRouter;

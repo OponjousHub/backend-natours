@@ -16,6 +16,8 @@ exports.signup = catchAsyncError(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
+    role: req.body.role,
+    passwordChangedAt: req.body.passwordChangedAt,
   });
 
   const token = signToken(newUser._id);
@@ -46,7 +48,7 @@ exports.login = catchAsyncError(async (req, res, next) => {
 
   // send token to the user
   const token = signToken(user._id);
-  console.log(token);
+  // console.log(token);
   res.status(200).json({
     status: 'success',
     token,
@@ -63,14 +65,15 @@ exports.protect = catchAsyncError(async (req, res, next) => {
   ) {
     token = req.headers.authorization.split(' ')[1];
   }
-  // console.log(token);
+  console.log(token);
+  console.log(req.headers.authorization);
   if (!token) {
     return next(new AppError('You are not logged in! Please log in.', 401));
   }
 
   // Verify token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-
+  console.log(decoded);
   // Check if the user still exist
   const currentUser = await User.findById(decoded.id);
   if (!currentUser)
@@ -103,3 +106,19 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
+
+exports.forgotPassword = catchAsyncError(async (req, res, next) => {
+  // 1) Get user based on POSTed
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new AppError('There is no user with this email address!', 404));
+  }
+
+  // 2) Generate the random reset token
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  //3) Send it to user's email
+});
+
+exports.resetPassword = (req, res, next) => {};

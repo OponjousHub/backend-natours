@@ -39,10 +39,6 @@ const tourSchema = new mongoose.Schema(
       default: 0,
     },
 
-    // rating: {
-    //   type: Number,
-    //   default: 4.5,
-    // },
     price: {
       type: Number,
       required: [true, 'A tour must have a price'],
@@ -103,16 +99,6 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
-// tourSchema.pre('save', function (next) {
-//   console.log('will save document...');
-//   next();
-// });
-
-// tourSchema.post('save', function (doc, next) {
-//   console.log(doc);
-//   next();
-// });
-
 ////// QUERY MIDDLEWARE
 tourSchema.pre(/^find/, function (next) {
   this.find({ secretTour: { $ne: true } });
@@ -127,16 +113,5 @@ tourSchema.pre('aggregate', function (next) {
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
-// const tourDoc = new Tour({
-//   name: 'Calaba Kitchen',
-//   // rating: 4.7,
-//   price: 487,
-// });
-// tourDoc
-//   .save()
-//   .then((doc) => console.log(doc))
-//   .catch((err) => {
-//     console.log('Error:', err);
-//   });
 
 module.exports = Tour;

@@ -1,9 +1,8 @@
-// const { options } = require('mongoose');
 const nodemailer = require('nodemailer');
 
 const sendEmail = async (options) => {
   //1) Create a transporter
-  const transporter = nodemailer.createTransporter({
+  const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
     auth: {
@@ -16,14 +15,14 @@ const sendEmail = async (options) => {
 
   // 2) Define the email aptions
   const mailOptions = {
-    from: 'Joseph Oponjous <joe@yahoo.com>',
+    from: 'Joseph Oponjous <hello@joseph.io>',
     to: options.email,
     subject: options.subject,
     text: options.message,
   };
 
   // 3) Actually send the email
-  await transporter.sendEmail(mailOptions);
+  await transporter.sendMail(mailOptions);
 };
 
 module.exports = sendEmail;

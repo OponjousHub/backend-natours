@@ -3,6 +3,15 @@ const Users = require('./../models/userModel');
 const AppError = require('./../utils/appError');
 const User = require('./../models/userModel');
 
+exports.deleteMe = catchAsyncError(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false });
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
+
 const filterObj = (obj, ...allawedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((el) => {

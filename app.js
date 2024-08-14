@@ -5,11 +5,18 @@ const userRouter = require('./route/userRoutes');
 const AppError = require('./utils/appError');
 const globalerrorHandler = require('./controllers/errorController');
 const rateLimit = require('express-rate-limit');
-
-///////////////// MIDDLEWARES ///////////////////
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const app = express();
+///////////////// MIDDLEWARES ///////////////////
 
+// Security middleware
+app.use(helmet());
+
+// Limit requests from same IP
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
@@ -17,7 +24,27 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
+
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data snitization against XSS
+app.use(xss());
+
+// Prevent against parameter pollution
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'ratingsQuantity',
+      'price',
+      'maxGroupSiz',
+      'ratingsAverage',
+      'difficulty',
+    ],
+  })
+);
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);

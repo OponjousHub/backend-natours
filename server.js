@@ -9,7 +9,6 @@ process.on('uncaughtException', (err) => {
 });
 
 const app = require('./app');
-const port = process.env.PORT || 3000;
 
 // console.log(process.env);
 const DB =
@@ -18,8 +17,9 @@ const DB =
 mongoose.connect(DB).then(() => console.log('DB connections successful'));
 // .catch((err) => console.log('errrrrrooooor'));
 
+const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+  console.log(`App running on port ${port}...`);
 });
 
 process.on('unhandledRejection', (err) => {

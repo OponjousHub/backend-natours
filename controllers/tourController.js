@@ -106,7 +106,7 @@ exports.createTour = catchAsyncError(async (req, res, next) => {
   });
 });
 
-exports.getTour = async (req, res, next) => {
+exports.getTour = catchAsyncError(async (req, res, next) => {
   try {
     const tour = await Tour.findById(req.params.id);
 
@@ -114,7 +114,7 @@ exports.getTour = async (req, res, next) => {
       return next(new AppError('No tour found with that ID', 404));
     }
 
-    res.status(201).json({
+    res.status(200).json({
       status: 'success',
       data: {
         tour,
@@ -126,7 +126,7 @@ exports.getTour = async (req, res, next) => {
       message: 'Could not fetch the selected tour!',
     });
   }
-};
+});
 
 exports.updateTour = catchAsyncError(async (req, res, next) => {
   const updatedTour = await Tour.findByIdAndUpdate(req.params.id, req.body, {

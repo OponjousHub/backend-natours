@@ -2,10 +2,17 @@
 const express = require('express');
 const tourController = require('../controllers/tourController');
 const authController = require('./../controllers/authController');
-
+const reviewRouter = require('./../route/reviewRoutes');
 const tourRouter = express.Router();
 
-// tourRouter.param('id', tourController.checkId);
+// tourRouter
+//   .route('/:tourId/reviews')
+//   .post(
+//     authController.protect,
+//     authController.restrictTo('user'),
+//     reviewController.createReview
+//   );
+tourRouter.use('/:tourId/reviews', reviewRouter);
 
 tourRouter.route('/tour-stats').get(tourController.getTourStatistics);
 tourRouter.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);

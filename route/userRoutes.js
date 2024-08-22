@@ -27,5 +27,4 @@ userRouter.patch(
 );
 userRouter.route('/').get(getAllUsers).post(createUser);
 userRouter.route('/:id').get(getUser).delete(deleteUser).patch(updateUser);
-
 module.exports = userRouter;

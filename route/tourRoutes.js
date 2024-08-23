@@ -12,7 +12,7 @@ const tourRouter = express.Router();
 //     authController.restrictTo('user'),
 //     reviewController.createReview
 //   );
-tourRouter.use('/:tourId/reviews', reviewRouter);
+tourRouter.use('/:tourId/reviews', authController.protect, reviewRouter);
 
 tourRouter.route('/tour-stats').get(tourController.getTourStatistics);
 tourRouter.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);

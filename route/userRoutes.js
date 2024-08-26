@@ -14,23 +14,20 @@ const userRouter = express.Router();
 
 userRouter.post('/signup', authController.signup);
 userRouter.post('/login', authController.login);
-
 userRouter.post('/forgotPassword', authController.forgotPassword);
 userRouter.patch('/resetPassword/:token', authController.resetPassword);
 
-userRouter.get(
-  '/me',
-  authController.protect,
-  userController.getme,
-  userController.getUser
-);
-userRouter.patch('/updateMe', authController.protect, userController.updateMe);
-userRouter.delete('/deleteMe', authController.protect, userController.deleteMe);
-userRouter.patch(
-  '/updateMyPassword',
-  authController.protect,
-  authController.updatePassword
-);
+// Protects all routes after this middleware
+userRouter.use(authController.protect);
+
+userRouter.get('/me', userController.getme, userController.getUser);
+userRouter.patch('/updateMe', userController.updateMe);
+userRouter.delete('/deleteMe', userController.deleteMe);
+userRouter.patch('/updateMyPassword', authController.updatePassword);
+
+// Protects all routes after this middleware
+userRouter.use(authController.protect);
+
 userRouter.route('/').get(getAllUsers).post(createUser);
 userRouter.route('/:id').get(getUser).delete(deleteUser).patch(updateUser);
 module.exports = userRouter;

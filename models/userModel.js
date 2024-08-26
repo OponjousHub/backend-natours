@@ -48,24 +48,24 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.pre('save', async function (next) {
-  // Check if the password is being modified or created the first time
-  if (!this.isModified('password')) return next();
+// userSchema.pre('save', async function (next) {
+//   // Check if the password is being modified or created the first time
+//   if (!this.isModified('password')) return next();
 
-  //Encrypt the password
-  this.password = await bcrpt.hash(this.password, 12);
+//   //Encrypt the password
+//   this.password = await bcrpt.hash(this.password, 12);
 
-  // delete the confirmation password
-  this.passwordConfirm = undefined;
-  next();
-});
+//   // delete the confirmation password
+//   this.passwordConfirm = undefined;
+//   next();
+// });
 
-userSchema.pre('save', function (next) {
-  if (!this.isModified('password') || this.isNew) return next();
+// userSchema.pre('save', function (next) {
+//   if (!this.isModified('password') || this.isNew) return next();
 
-  this.passwordChangedAt = Date.now() - 1000;
-  next();
-});
+//   this.passwordChangedAt = Date.now() - 1000;
+//   next();
+// });
 
 userSchema.pre(/^find/, function (next) {
   // this points to the current query

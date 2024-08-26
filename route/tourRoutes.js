@@ -15,7 +15,13 @@ const tourRouter = express.Router();
 tourRouter.use('/:tourId/reviews', authController.protect, reviewRouter);
 
 tourRouter.route('/tour-stats').get(tourController.getTourStatistics);
-tourRouter.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
+tourRouter
+  .route('/monthly-plan/:year')
+  .get(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide', 'guide'),
+    tourController.getMonthlyPlan
+  );
 
 tourRouter
   .route('/5-best-cheap')
@@ -23,11 +29,19 @@ tourRouter
 
 tourRouter
   .route('/')
-  .get(authController.protect, tourController.getAllTours)
-  .post(tourController.createTour);
+  .get(tourController.getAllTours)
+  .post(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide'),
+    tourController.createTour
+  );
 tourRouter
   .route('/:id')
-  .patch(tourController.updateTour)
+  .patch(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide'),
+    tourController.updateTour
+  )
   .get(tourController.getTour)
   .delete(
     authController.protect,

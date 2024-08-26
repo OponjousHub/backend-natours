@@ -13,6 +13,12 @@ exports.deleteMe = catchAsyncError(async (req, res, next) => {
   });
 });
 
+exports.getme = (req, res, next) => {
+  req.params.id = req.user.id;
+
+  next();
+};
+
 const filterObj = (obj, ...allawedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((el) => {

@@ -81,22 +81,6 @@ exports.getMonthlyPlan = catchAsyncError(async (req, res, next) => {
   });
 });
 
-// exports.getAllTours = catchAsyncError(async (req, res, next) => {
-//   //EXECUTE QUERY
-//   const features = new APIfeatures(Tour.find(), req.query)
-//     .filter()
-//     .sort()
-//     .limitFields()
-//     .paginate();
-//   const tours = await features.query;
-
-//   res.status(200).json({
-//     status: 'success',
-//     results: tours.length,
-//     data: { tours: tours },
-//   });
-// });
-
 // Get all Tours
 exports.getAllTours = factory.getAll(Tour);
 
@@ -109,3 +93,34 @@ exports.getTour = factory.getOne(Tour, { path: 'reviews' });
 exports.updateTour = factory.deleteOne(Tour);
 
 exports.deleteTour = factory.deleteOne(Tour);
+
+// /tours-within/:distance/center/6.429567, 3.432026/unit/:unit
+
+exports.geToursWithin = catchAsyncError(async (req, res, next) => {
+  const { distance, latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(',');
+
+  const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
+
+  if (!lat || !lng) {
+    next(
+      new AppError(
+        'Please provide latitude and longitude in the format lat, lng.',
+        400
+      )
+    );
+  }
+  console.log(distance, lat, lng, unit);
+
+  const tours = await Tour.find({
+    startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    results: tours.length,
+    data: {
+      data: tours,
+    },
+  });
+});

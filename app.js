@@ -10,9 +10,16 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const path = require('path');
 
 const app = express();
+
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
 ///////////////// MIDDLEWARES ///////////////////
+
+//Serving static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Security middleware
 app.use(helmet());
@@ -46,6 +53,13 @@ app.use(
     ],
   })
 );
+
+app.get('/', (req, res) => {
+  res.status(200).render('base', {
+    tour: 'The Forest Hiker',
+    user: 'Oponjous',
+  });
+});
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);

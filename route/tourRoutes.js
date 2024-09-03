@@ -39,6 +39,10 @@ tourRouter
 tourRouter
   .route('/tours-within/:distance/center/:latlng/unit/:unit')
   .get(tourController.geToursWithin);
+
+tourRouter
+  .route('/distances/:latlng/unit/:unit')
+  .get(tourController.getDistances);
 tourRouter
   .route('/:id')
   .patch(

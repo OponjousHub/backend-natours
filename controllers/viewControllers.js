@@ -1,7 +1,7 @@
 const Tour = require('../models/tourModel');
 const catchAsyncError = require('../utils/catchAsync');
 
-exports.getOverview = catchAsyncError(async (req, res) => {
+exports.getOverview = catchAsyncError(async (req, res, next) => {
   // Getting the tour
   const tours = await Tour.find();
 
@@ -13,7 +13,7 @@ exports.getOverview = catchAsyncError(async (req, res) => {
   });
 });
 
-exports.getTours = catchAsyncError(async (req, res) => {
+exports.getTours = catchAsyncError(async (req, res, next) => {
   // Get the requested tour
   const tour = await Tour.findOne({ slug: req.params.slug }).populate({
     path: 'reviews',
@@ -24,3 +24,9 @@ exports.getTours = catchAsyncError(async (req, res) => {
     tour,
   });
 });
+
+exports.getLoginForm = (req, res, next) => {
+  res.status(200).render('login', {
+    title: 'Login to your account',
+  });
+};

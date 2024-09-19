@@ -10,9 +10,16 @@ const login = async (email, password) => {
         password,
       },
     });
+
+    if (ress.data.status === 'success') {
+      alert('Successfully logged in');
+      window.setTimeout(() => {
+        location.assign('/');
+      });
+    }
     console.log(ress);
   } catch (err) {
-    console.log(err.response.data);
+    alert(err.response.data.message);
   }
 };
 

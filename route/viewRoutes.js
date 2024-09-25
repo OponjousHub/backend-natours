@@ -5,6 +5,11 @@ const authController = require('../controllers/authController');
 const router = express.Router();
 
 router.get('/me', authController.protect, viewControllers.getAccount);
+router.post(
+  '/submit_user_data',
+  authController.protect,
+  viewControllers.updateUserData
+);
 
 router.use(authController.isLoggedIn);
 

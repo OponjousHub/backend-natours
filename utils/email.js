@@ -29,11 +29,14 @@ module.exports = class Email {
   // Sendthe actual email
   async send(template, subject) {
     // Render HTML based on the pug template
-    const html = pug.renderFile(`${__dirname}/..views/emails/${template}.pug`, {
-      firstName: this.firstName,
-      url: this.url,
-      subject,
-    });
+    const html = pug.renderFile(
+      `${__dirname}/../views/emails/${template}.pug`,
+      {
+        firstName: this.firstName,
+        url: this.url,
+        subject,
+      }
+    );
 
     // Define email options
     const mailOptions = {
@@ -41,7 +44,7 @@ module.exports = class Email {
       to: this.to,
       subject,
       html,
-      text: htmlToText.fromString(html),
+      text: htmlToText.convert(html),
     };
 
     // Create a transtort and send email
@@ -50,6 +53,6 @@ module.exports = class Email {
   }
 
   async sendWelcome() {
-    await this.send('wecome', 'welcometo the Natours family');
+    await this.send('welcome', 'welcometo the Natours family');
   }
 };

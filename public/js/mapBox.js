@@ -26,7 +26,7 @@ export const displayMap = function (location) {
 
     // Add Popup
     new mapboxgl.Popup({
-      offset: 35,
+      offset: 25,
     })
       .setLngLat(loc.coordinates)
       .setHTML(`Day <p>${loc.day}: ${loc.description}</p>`)
@@ -38,7 +38,7 @@ export const displayMap = function (location) {
 
   map.fitBounds(bounds, {
     padding: {
-      top: 100,
+      top: 200,
       bottom: 100,
       right: 100,
       left: 100,

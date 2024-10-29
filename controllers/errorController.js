@@ -1,4 +1,4 @@
-const { JsonWebTokenError } = require('jsonwebtoken');
+// const { JsonWebTokenError } = require('jsonwebtoken');
 const AppError = require('../utils/appError');
 
 const handleCastErrorDB = (err) => {
@@ -7,13 +7,12 @@ const handleCastErrorDB = (err) => {
 };
 
 const handleDuplicateDB = (err) => {
-  const value = err.errmsg.match(/(["'])(?:(?=(\\?))\2.)*?\1/);
+  const value = err.errmsg.match(/(["'])(?:(?=(\\?))\2.)*?\1/)[0];
   console.log(value);
-  const message = `Duplicate value ${value}: Please use a different value`;
+  const message = `Duplicate field value ${value}: Please use a different value`;
 
-  return new AppError(
-    `Duplicate field value: ${message}: please use a different value`
-  );
+  return new AppError(message, 400);
+  // `Duplicate field value: ${message}: please use a different value`
 };
 
 const handleJWTError = () =>
@@ -22,9 +21,9 @@ const handleJWTExpiredError = () =>
   new AppError('Your token has expired! Please log in again.', 401);
 
 const handleValidationErrorDB = (err) => {
-  const error = Object.values(err.error).map((el) => el.massage);
+  const errors = Object.values(err.errors).map((el) => el.massage);
 
-  const message = `Invalid input data. ${error.join('. ')}`;
+  const message = `Invalid input data. ${errors.join('. ')}`;
   return new AppError(message, 400);
 };
 
@@ -39,7 +38,7 @@ const sendErrorDev = (err, req, res) => {
     });
   }
   // RENDERED WEBSITE
-  console.error(err);
+  console.error('ERROR 💥', err);
   return res.status(err.statusCode).render('error', {
     title: 'Something went wrong!',
     msg: err.message,
@@ -49,37 +48,39 @@ const sendErrorDev = (err, req, res) => {
 const sendErrorProd = (err, req, res) => {
   // FOR API
   if (req.originalUrl.startsWith('/api')) {
-    // Operatiional Error, trusted error: send messsage to the client
+    // A) Operatiional Error, trusted error: send messsage to the client
     if (err.isOperational) {
-      return res.status(err.statusCode).render('error', {
-        title: 'Something went wrong!',
-        msg: err.message,
+      return res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message,
       });
     }
+    // B) Programming or other unknown error: don't leak error details
     // 1) Log the error
-    console.error(err);
+    console.error('ERROR 💥', err);
 
     //send generic message
-    return res.status(err.statusCode).render('error', {
-      title: 'Something went wrong!',
-      msg: 'Please try again later',
+    return res.status(500).json({
+      status: 'error',
+      message: 'Something went very wrong!',
     });
   }
   // RENDERED WEBSITE
-  // Operatiional Error, trusted error: send messsage to the client
+  // // A) Operatiional Error, trusted error: send messsage to the client
   if (err.isOperational) {
-    return res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
+    return res.status(err.statusCode).render('error', {
+      title: 'Something went wrong!',
+      msg: err.message,
     });
   }
+  // B) Programming or other unknown error: don't leak error details
   // 1) Log the error
-  console.error(err);
+  console.error('ERROR 💥', err);
 
   //send generic message
-  return res.status(500).json({
-    status: 'error',
-    message: 'Something went very wrong!',
+  return res.status(err.statusCode).render('error', {
+    title: 'Something went wrong!',
+    msg: 'Please try again later',
   });
 };
 

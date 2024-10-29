@@ -144,7 +144,7 @@ exports.createTour = factory.createOne(Tour);
 // get one tour
 exports.getTour = factory.getOne(Tour, { path: 'reviews' });
 
-exports.updateTour = factory.deleteOne(Tour);
+exports.updateTour = factory.updateOne(Tour);
 
 exports.deleteTour = factory.deleteOne(Tour);
 

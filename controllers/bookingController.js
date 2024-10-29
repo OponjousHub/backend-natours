@@ -15,7 +15,7 @@ exports.getCheckoutSession = catchAsyncError(async (req, res, next) => {
     payment_method_types: ['card'],
     success_url: `${req.protocol}://${req.get('host')}/?tour=${
       req.params.tourId
-    }&user=${req.user}&price=${tour.price}`,
+    }&user=${req.user.id}&price=${tour.price}`,
     cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourId,
@@ -47,14 +47,9 @@ exports.createBookingCheckout = catchAsyncError(async (req, res, next) => {
   // This is temporally because everyone can make a booking without paaying
   const { tour, user, price } = req.query;
 
-  if (!tour && !user && !price) return;
+  if (!tour && !user && !price) return next();
 
-  const booking = await Booking.create({ tour, user, price });
-
-  res.status(200).json({
-    status: 'success',
-    data: booking,
-  });
+  await Booking.create({ tour, user, price });
 
   res.redirect(req.originalUrl.split('?')[0]);
 });

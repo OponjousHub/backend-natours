@@ -45,7 +45,6 @@ exports.signup = catchAsyncError(async (req, res, next) => {
   });
 
   const url = `${req.protocol}://${req.get('host')}/me`;
-  console.log(url);
   await new Email(newUser, url).sendWelcome();
 
   createSendToken(newUser, 201, res);
@@ -95,7 +94,6 @@ exports.protect = catchAsyncError(async (req, res, next) => {
 
   // Verify token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log(decoded);
   // Check if the user still exist
   const currentUser = await User.findById(decoded.id);
   if (!currentUser)
@@ -221,13 +219,6 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
 
   // 3) Update changePasswordAt property for the user
   createSendToken(user, 200, res);
-  // // 4) Log the user in, send JWT
-  // const token = signToken(user._id);
-  // // console.log(token);
-  // res.status(200).json({
-  //   status: 'success',
-  //   token,
-  // });
 });
 
 exports.updatePassword = catchAsyncError(async (req, res, next) => {

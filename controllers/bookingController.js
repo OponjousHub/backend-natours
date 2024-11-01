@@ -8,7 +8,6 @@ const factory = require('./handleFactory');
 exports.getCheckoutSession = catchAsyncError(async (req, res, next) => {
   // 1) get the currently booked tour
   const tour = await Tour.findById(req.params.tourId);
-  // console.log(tour, 'this is it');
 
   //2) create checkout session
   const session = await stripe.checkout.sessions.create({
@@ -53,3 +52,20 @@ exports.createBookingCheckout = catchAsyncError(async (req, res, next) => {
 
   res.redirect(req.originalUrl.split('?')[0]);
 });
+
+exports.getMyTours = catchAsyncError(async (req, res, next) => {
+  const bookings = await Booking.find({ user: req.user.id });
+  const tourIDs = bookings.map((el) => el.tour);
+  const tours = await Tour.find({ _id: { $in: tourIDs } });
+
+  res.status(200).render('overview', {
+    title: 'My Tours',
+    tours,
+  });
+});
+
+exports.getAllBookings = factory.getAll(Booking);
+exports.createBooking = factory.createOne(Booking);
+exports.getOneBooking = factory.getOne(Booking);
+exports.deleteBooking = factory.deleteOne(Booking);
+exports.updateBooking = factory.updateOne(Booking);

@@ -13,10 +13,10 @@ block content
       nav.user-view__menu
         ul.side-nav
           +navItem('#', 'settings','Settings',true)
-          +navItem('#', 'briefcase','My bookings')
+          +navItem('/my-tours', 'briefcase','My bookings')
           +navItem('#', 'star','My reviews')
           +navItem('#', 'credit-card','Billing')
-        
+        n 
         - if(user.role === 'admin')
           .admin-nav
             h5.admin-nav__heading Admin

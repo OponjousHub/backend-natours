@@ -44,7 +44,6 @@ exports.getAccount = (req, res) => {
 };
 
 exports.updateUserData = catchAsyncError(async (req, res, next) => {
-  console.log('Udating user', req.body);
   const updatedUser = await User.findByIdAndUpdate(
     req.user.id,
 

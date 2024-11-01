@@ -10,12 +10,10 @@ process.on('uncaughtException', (err) => {
 
 const app = require('./app');
 
-// console.log(process.env);
 const DB =
   'mongodb+srv://josephikegwu:SXT2hDodGoY7hnV0@cluster0.jwuyhe7.mongodb.net/natures?retryWrites=true&w=majority&appName=Cluster0';
 
 mongoose.connect(DB).then(() => console.log('DB connections successful'));
-// .catch((err) => console.log('errrrrrooooor'));
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {

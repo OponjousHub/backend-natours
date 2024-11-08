@@ -15,6 +15,7 @@ const hpp = require('hpp');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 const app = express();
 
@@ -23,6 +24,22 @@ app.enable('trust proxy');
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 ///////////////// MIDDLEWARES ///////////////////
+
+// Implimenting cors
+app.use(cors());
+
+// Access-Control-Allow-Origin
+
+// If we have our API in one domain and wants to access it from another domain,say natours.com
+// app.use(cors({
+//   origin: 'https://www.natours.com'
+// }))
+
+// Below is for non simple requests that are not get and post
+app.options('*', cors());
+// if we want to implement it on only one route
+// app.use('/api/vi/tours/:id', cors())
+
 //Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
 

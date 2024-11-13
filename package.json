@@ -34,7 +34,7 @@
     "ndb": "^1.1.5",
     "nodemailer": "^6.9.14",
     "nodemailer-mailgun-transport": "^2.1.5",
-    "nodemon": "^3.1.2",
+    "nodemon": "^3.1.7",
     "pug": "^3.0.3",
     "sharp": "^0.33.5",
     "slugify": "^1.6.6",
